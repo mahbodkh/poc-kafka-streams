@@ -1,0 +1,24 @@
+{
+  "doc": "Schema for general equipment status",
+  "fields": [
+    {
+      "doc": "equiptments product id",
+      "name": "productId",
+      "type": "string"
+    },
+    {
+      "doc": "the status of the equipment",
+      "name": "status",
+      "symbols": [
+        "ONLINE",
+        "OFFLINE",
+        "PRODUCING",
+        "ERROR"
+      ],
+      "type": "string"
+    }
+  ],
+  "name": "EquipmentStatus",
+  "namespace": "com.global.mrd",
+  "type": "record"
+}

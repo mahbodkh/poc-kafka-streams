@@ -1,0 +1,143 @@
+{
+  "name": "ProductData",
+  "namespace": "com.global.ema.model",
+  "type": "record",
+  "fields": [
+    {
+      "default": null,
+      "name": "actShotCounter",
+      "type": [
+        "null",
+        "long"
+      ]
+    },
+    {
+      "default": null,
+      "name": "data",
+      "type": [
+        "null",
+        {
+          "items": {
+            "fields": [
+              {
+                "name": "timestamp",
+                "type": "string"
+              }
+            ],
+            "name": "ProductData",
+            "type": "record"
+          },
+          "java-class": "java.util.List",
+          "type": "array"
+        }
+      ]
+    },
+    {
+      "default": null,
+      "name": "cavity",
+      "type": [
+        "null",
+        "long"
+      ]
+    },
+    {
+      "default": "ONLINE",
+      "name": "connectionState",
+      "type": "string"
+    },
+    {
+      "default": null,
+      "name": "customerId",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "default": null,
+      "name": "cycleTime",
+      "type": [
+        "null",
+        "double"
+      ]
+    },
+    {
+      "default": null,
+      "name": "eternalShotCounter",
+      "type": [
+        "null",
+        "long"
+      ]
+    },
+    {
+      "default": null,
+      "name": "goodPartCounter",
+      "type": [
+        "null",
+        "long"
+      ]
+    },
+    {
+      "default": null,
+      "name": "producing",
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    {
+      "default": null,
+      "name": "lifelongOperationHours",
+      "type": [
+        "null",
+        "long"
+      ]
+    },
+    {
+      "default": null,
+      "name": "maxPartsCounter",
+      "type": [
+        "null",
+        "long"
+      ]
+    },
+    {
+      "default": null,
+      "name": "operationMode",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "productId",
+      "type": "string"
+    },
+    {
+      "default": null,
+      "name": "rejectPartCounter",
+      "type": [
+        "null",
+        "long"
+      ]
+    },
+    {
+      "name": "shotTrigger",
+      "type": [
+        "null",
+        "long"
+      ]
+    },
+    {
+      "default": null,
+      "name": "timestamp",
+      "type": [
+        "null",
+        {
+          "logicalType": "timestamp-millis",
+          "type": "long"
+        }
+      ]
+    }
+  ]
+}

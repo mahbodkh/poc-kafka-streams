@@ -1,0 +1,36 @@
+{
+  "name": "ProductStatus",
+  "namespace": "com.global.productStats",
+  "type": "record",
+  "fields": [
+    {
+      "name": "timestamp",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "uniqid",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "status",
+      "symbols": [
+        "NEW",
+        "ONLINE",
+        "OFFLINE",
+        "RUNNING",
+        "ERROR",
+        "UNKNOWN"
+      ],
+      "type": [
+        "null",
+        "string"
+      ]
+    }
+  ]
+}

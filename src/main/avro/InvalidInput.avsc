@@ -1,0 +1,20 @@
+{
+  "type": "record",
+  "name": "InvalidInput",
+  "namespace": "com.global.poc.info.avro",
+  "fields": [
+    {
+      "name": "faultReason",
+      "type": [
+        {
+          "type": "enum",
+          "name": "FaultReason",
+          "symbols": [
+            "NO_ID_KEY_FOUND",
+            "JSON_PROCESSING_EXCEPTION"
+          ]
+        }
+      ]
+    }
+  ]
+}

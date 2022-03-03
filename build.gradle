@@ -1,0 +1,151 @@
+plugins {
+  // Java plugin for dependency management
+  id "java"
+  // spring boot plugin
+  id "org.springframework.boot" version "${springBootVersion}"
+  // spring boot dependencies
+  id "io.spring.dependency-management" version "${springDependencyManagement}"
+  // Google JIB docker containerization (see jib{} options)
+  id "com.google.cloud.tools.jib" version "${jibVersion}"
+  // generate git properties for actuator/info endpoint
+  id "com.gorylenko.gradle-git-properties" version "${gitPluginVersion}"
+  // check for gradle dependency updates (task dependencyUpdates)
+  id "com.github.ben-manes.versions" version "${benManesVersion}"
+  // plugin for creating java classes from AVRO schema files (*.asvc) in src/main/avro
+  id "com.github.davidmc24.gradle.plugin.avro" version "${avroPluginVersion}"
+}
+
+group = "com.engelglobal"
+version = "0.0.1-SNAPSHOT"
+
+
+
+wrapper { gradleVersion = "${gradleWrapperVersion}" }
+
+configurations {
+  // allow dev tools to recompile code during runtime (enabled only in "dev" profile -> application-dev.properties)
+  developmentOnly
+  runtimeClasspath {
+    extendsFrom developmentOnly
+  }
+  compileOnly {
+    extendsFrom annotationProcessor
+  }
+}
+
+// artifactory credentials must be defined in your local ~/.gradle/settings.gradle
+repositories {
+  maven {
+    url = "${engel_artifactory_contextUrl}/DI-gradle-virtual"
+    credentials {
+      username = "${engel_artifactory_user}"
+      password = "${engel_artifactory_password}"
+    }
+  }
+  maven {
+    url = "${engel_artifactory_contextUrl}/DI-maven-virtual"
+    credentials {
+      username = "${engel_artifactory_user}"
+      password = "${engel_artifactory_password}"
+    }
+  }
+  maven {
+    url = "${usp_artifactory_contextUrl}/gradle-dev"
+    credentials {
+      username = "${usp_artifactory_user}"
+      password = "${usp_artifactory_password}"
+    }
+  }
+  mavenCentral()
+}
+
+dependencies {
+
+  implementation "io.springfox:springfox-boot-starter:${springfoxBootVersion}"
+
+  // database drivers
+  implementation "org.postgresql:postgresql"
+
+  // kafka streams dependencies for statestores/ ktables
+  implementation "org.apache.kafka:kafka-streams"
+  implementation "org.springframework.cloud:spring-cloud-stream"
+  implementation "org.springframework.cloud:spring-cloud-stream-binder-kafka-streams"
+  implementation "org.springframework.cloud:spring-cloud-schema-registry-client"
+  implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-avro"
+  implementation "org.springframework.boot:spring-boot-starter-data-rest"
+  implementation "io.confluent:kafka-avro-serializer:${kafkaVersion}"
+  implementation "org.apache.avro:avro:${apacheAvroVersion}"
+  implementation "io.confluent:kafka-streams-avro-serde:${kafkaVersion}"
+  implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-avro:${jacksonDataformatAvroVersion}"
+
+
+  // Dependencies for Generated Code from OpenAPI-Spec
+  //implementation "org.openapitools:jackson-databind-nullable:${jacksonDatabindVersion}"
+  implementation "io.swagger:swagger-annotations:${swaggerAnnotationsVersion}"
+  implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml"
+  implementation "com.github.java-json-tools:json-patch:${javaJsonToolsVersion}"
+
+  // enable HATEOAS compliant rest API
+  implementation "org.springframework.boot:spring-boot-starter-hateoas"
+  // enable spring cloud EUREKA service discovery (see @EnableServiceDiscovery)
+  implementation "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client"
+  // enable spring cloud EUREKA service discovery feign clients (see @EnableFeign)
+  implementation "org.springframework.cloud:spring-cloud-starter-openfeign"
+  // enable prometheus actuator endpoints for service monitoring
+  implementation "org.springframework.boot:spring-boot-starter-actuator"
+  implementation "io.micrometer:micrometer-registry-prometheus"
+
+  // allow dev tools to recompile code during runtime (enabled only in "dev" profile -> application-dev.properties)
+  developmentOnly "org.springframework.boot:spring-boot-devtools"
+
+  // allow application properties from configuration property classes (see @EnableConfigurationProperties)
+  annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+  //enable lombok annotation compiler
+  compileOnly "org.projectlombok:lombok"
+  annotationProcessor "org.projectlombok:lombok"
+  testAnnotationProcessor "org.projectlombok:lombok"
+
+  // enable mapper service
+  compileOnly "org.mapstruct:mapstruct"
+  annotationProcessor "org.mapstruct:mapstruct-processor"
+
+  // enable spring boot tests (see @SpringBootTest)
+  testImplementation "org.springframework.boot:spring-boot-starter-test"
+
+  // enable kafka test container
+  testImplementation "org.springframework.kafka:spring-kafka-test"
+
+  testImplementation "org.junit.jupiter:junit-jupiter-api"
+  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+}
+
+dependencyManagement {
+  imports {
+    mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+  }
+}
+
+test {
+  useJUnitPlatform() // use JUnit 5 (Jupiter), otherwise it tries to import JUnit 4 which it does not find
+}
+
+
+
+jib {
+  if (project.hasProperty("buildId")) {
+    ext.setProperty("tag", "${version.toString().split("-")[0]}-${buildId}")
+  } else {
+    ext.setProperty("tag", "${version.toString().split("-")[0]}")
+  }
+  from {
+    image = "adoptopenjdk/openjdk11:alpine-jre"
+  }
+  to {
+    image = "jfrog.engel.int/docker-virtual/edp/${project.name}:${tag}"
+    auth {
+      username = "${engel_artifactory_user}"
+      password = "${engel_artifactory_password}"
+    }
+  }
+}

@@ -1,0 +1,123 @@
+# @see spring boot template project: https://tfs.engel.int/tfs/DS/EIOC/_git/spring-boot-template
+trigger:
+  - master
+pr: none
+
+pool:
+  name: DockerLinux
+
+variables:
+  # Workaround: NODE_EXTRA_CA_CERTS are needed to download artifacts and secrets
+  - name: NODE_EXTRA_CA_CERTS
+    value: '/etc/ssl/certs/ca-certificates.crt'
+    readonly: true
+
+stages:
+  - stage: BuildAndTest
+    jobs:
+      - job: BuildAndTest
+        displayName: Build and Test
+        container: jfrog.engel.int/docker-virtual/edp/devops/buildslave-java11:latest
+        steps:
+          - task: DownloadSecureFile@1
+            name: gradle_properties
+            displayName: Download gradle.properties
+            inputs:
+              secureFile: gradle.properties
+          - script: |
+              mkdir .secureFiles
+              cp $(gradle_properties.secureFilePath) .secureFiles/gradle.properties
+          - task: SonarQubePrepare@4
+            # the extra property 'sonar.jacoco.reportPath' is deprecated, but server is very old version 6.7.7, so it is still valid.
+            # when upgrading the sonarqube server, the newer property 'sonar.jacoco.reportPaths' must be used.
+            inputs:
+              SonarQube: 'SonarQube'
+              scannerMode: 'Other'
+              extraProperties: |
+                sonar.projectKey=$(Build.Repository.Name)
+                sonar.jacoco.reportPath=build/jacoco/test.exec
+                sonar.jacoco.reportPaths=build/jacoco/test.exec
+                sonar.exclusions=build/generated-main-avro-java/**
+          - task: Gradle@2
+            displayName: Gradle build and check
+            condition: succeeded()
+            inputs:
+              tasks: 'build'
+              options: '-Dgradle.user.home=.secureFiles'
+              publishJUnitResults: true
+              testResultsFiles: '**/TEST-*.xml'
+              sqAnalysisEnabled: true
+              sqGradlePluginVersionChoice: 'build'
+          - task: SonarQubePublish@4
+            inputs:
+              pollingTimeoutSec: '300'
+          - task: dependency-check-build-task@6
+            inputs:
+              projectName: '$(Build.Repository.Name)'
+              scanPath: '$(System.DefaultWorkingDirectory)/build/libs'
+              format: 'HTML, JUNIT'
+          - task: Gradle@2
+            displayName: Gradle jibBuildTar
+            condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
+            inputs:
+              tasks: 'jibBuildTar'
+              options: '-Dgradle.user.home=.secureFiles -PbuildId=$(Build.BuildNumber)'
+              publishJUnitResults: false
+          - task: Gradle@2
+            displayName: Gradle jib (publishing to Artifactory)
+            condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+            inputs:
+              tasks: 'jib'
+              options: '-Dgradle.user.home=.secureFiles -PbuildId=$(Build.BuildNumber)'
+              publishJUnitResults: false
+          # Azure Devops does not allow to show html with external resources. So the already generated jacocoTestReport can not be used.
+          # Publish jacoco execution file to be used by task 'PublishCodeCoverageResults'.
+          - task: PublishBuildArtifacts@1
+            condition: always()
+            continueOnError: true
+            displayName: Stash Jacoco Test Coverage
+            inputs:
+              pathtoPublish: '$(System.DefaultWorkingDirectory)/build/jacoco'
+              artifactName: JacocoTestCoverage
+          # Publish jacocoTestReport result to be used for manual download and analysis.
+          - task: PublishBuildArtifacts@1
+            condition: always()
+            continueOnError: true
+            displayName: Stash Jacoco Test Report
+            inputs:
+              pathtoPublish: '$(System.DefaultWorkingDirectory)/build/reports/jacoco/test'
+              artifactName: JacocoTestReport
+          # Publish dependencyCheck result as JUnit test result to be directly integrated within pipeline job.
+          - task: PublishTestResults@2
+            inputs:
+              testResultsFormat: 'JUnit'
+              testResultsFiles: 'dependency-check/*.xml'
+              searchFolder: '$(Common.TestResultsDirectory)'
+              testRunTitle: 'Dependency Check'
+      # The task 'PublishCodeCoverageResults' requires to have dot.net
+      # This job will run on build agent from pool 'DockerLinux' and not within container used for build, as it does not support dot.net.
+      - job: PublishResults
+        displayName: Publish Test Results
+        condition: always()
+        dependsOn:
+          - BuildAndTest
+        steps:
+          - task: DownloadBuildArtifacts@0
+            displayName: Download Jacoco Test Coverage
+            inputs:
+              downloadType: 'specific'
+              downloadPath: '$(System.DefaultWorkingDirectory)/build/jacoco'
+              itemPattern: '**/*.exec'
+          - task: DownloadBuildArtifacts@0
+            displayName: Download Jacoco Test Report
+            inputs:
+              downloadType: 'specific'
+              downloadPath: '$(System.DefaultWorkingDirectory)/build/reports/jacoco/test'
+              itemPattern: '**/*.xml'
+          - task: PublishCodeCoverageResults@1
+            displayName: Generate Coverage Report
+            inputs:
+              codeCoverageTool: 'JaCoCo'
+              summaryFileLocation: '$(System.DefaultWorkingDirectory)/build/reports/jacoco/test/JacocoTestReport/jacocoTestReport.xml'
+              pathToSources: '$(System.DefaultWorkingDirectory)/src/main/java'
+              additionalCodeCoverageFiles: '$(System.DefaultWorkingDirectory)/build/jacoco/JacocoTestCoverage/*.exec'
