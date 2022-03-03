@@ -38,3 +38,5 @@ out/
 src/generated/
 src/spec/openapi/
 /src/main/resources/application-local.properties
+
+.DS_Store
