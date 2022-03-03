@@ -24,7 +24,7 @@
                 "type": "string"
               }
             ],
-            "name": "ProductData",
+            "name": "details",
             "type": "record"
           },
           "java-class": "java.util.List",
@@ -35,7 +35,10 @@
     {
       "default": null,
       "name": "productName",
-      "type": "string"
+      "type": [
+        "null",
+        "string"
+      ]
     }
   ]
 }

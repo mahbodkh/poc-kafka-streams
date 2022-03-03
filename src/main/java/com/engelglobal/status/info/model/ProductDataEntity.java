@@ -16,8 +16,8 @@ public class ProductDataEntity
   private String productId;
   @JsonProperty("productName")
   private String productName;
-  @JsonProperty("data")
-  private List<Detail> datas;
+  @JsonProperty("details")
+  private List<Detail> details;
 
   @Data
   @NoArgsConstructor
