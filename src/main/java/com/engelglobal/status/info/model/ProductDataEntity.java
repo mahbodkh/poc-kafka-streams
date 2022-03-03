@@ -17,12 +17,12 @@ public class ProductDataEntity
   @JsonProperty("productName")
   private String productName;
   @JsonProperty("data")
-  private List<Data> datas;
+  private List<Detail> datas;
 
   @Data
   @NoArgsConstructor
   @AllArgsConstructor
-  public static class Data
+  public static class Detail
   {
     @JsonProperty("timestamp")
     private String timestamp;
