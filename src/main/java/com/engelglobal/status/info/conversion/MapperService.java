@@ -1,8 +1,5 @@
 package com.engelglobal.status.info.conversion;
 
-import at.engel.edgedevice.ema.machineStats_agent.MachineStatus;
-import com.engel.ema.model.MachineStatusData;
-import com.engelglobal.mrd.EquipmentStatus;
 import com.engelglobal.status.info.model.EquipmentStatusEntity;
 import com.engelglobal.status.info.model.ProductDataEntity;
 import com.engelglobal.status.info.model.ProductStatusEntity;
@@ -15,7 +12,7 @@ import java.util.Arrays;
 public interface MapperService
 {
 
-  ProductStatusEntity mapInputMachineStatusAvroToMachineStatusEntity(MachineStatus avro);
-  ProductDataEntity mapInputMachineStatusDataAvroToMachineStatusDataEntity(MachineStatusData avro);
+  ProductStatusEntity mapInputMachineStatusAvroToMachineStatusEntity(ProductStatus avro);
+  ProductDataEntity mapInputMachineStatusDataAvroToMachineStatusDataEntity(ProductData avro);
   EquipmentStatus mapInputAggregateToEquipmentStatusAvro(EquipmentStatusEntity entity);
 }

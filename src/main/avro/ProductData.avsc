@@ -36,14 +36,6 @@
       "default": null,
       "name": "productName",
       "type": "string"
-    },
-    {
-      "default": null,
-      "name": "customerId",
-      "type": [
-        "null",
-        "string"
-      ]
     }
   ]
 }
