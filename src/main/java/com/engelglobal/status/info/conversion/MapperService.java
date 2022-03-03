@@ -3,6 +3,9 @@ package com.engelglobal.status.info.conversion;
 import com.engelglobal.status.info.model.EquipmentStatusEntity;
 import com.engelglobal.status.info.model.ProductDataEntity;
 import com.engelglobal.status.info.model.ProductStatusEntity;
+import com.global.ema.model.ProductData;
+import com.global.mrd.EquipmentStatus;
+import com.global.productStats.ProductStatus;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 

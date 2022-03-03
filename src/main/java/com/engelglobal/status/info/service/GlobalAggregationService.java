@@ -2,6 +2,8 @@ package com.engelglobal.status.info.service;
 
 import com.engelglobal.status.info.conversion.MapperService;
 import com.engelglobal.status.info.model.EquipmentStatusEntity;
+import com.global.ema.model.ProductData;
+import com.global.productStats.ProductStatus;
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
