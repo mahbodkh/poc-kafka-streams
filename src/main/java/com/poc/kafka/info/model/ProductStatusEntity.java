@@ -1,4 +1,4 @@
-package com.engelglobal.status.info.model;
+package com.poc.kafka.info.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;

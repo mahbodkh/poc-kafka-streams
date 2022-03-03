@@ -1,6 +1,6 @@
-package com.engelglobal.status.info.serialization;
+package com.poc.kafka.info.serialization;
 
-import com.engelglobal.status.info.model.ProductDataEntity;
+import com.poc.kafka.info.model.ProductDataEntity;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serializer;

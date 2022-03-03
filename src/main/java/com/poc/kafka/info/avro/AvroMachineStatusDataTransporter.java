@@ -1,4 +1,4 @@
-package com.engelglobal.status.info.avro;
+package com.poc.kafka.info.avro;
 
 public class AvroMachineStatusDataTransporter
 {

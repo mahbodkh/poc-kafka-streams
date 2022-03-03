@@ -1,4 +1,4 @@
-package com.engelglobal.status.info.configuration;
+package com.poc.kafka.info.configuration;
 
 import com.fasterxml.jackson.core.json.JsonReadFeature;
 import com.fasterxml.jackson.databind.JsonNode;

@@ -1,8 +1,8 @@
-package com.engelglobal.status.info.conversion;
+package com.poc.kafka.info.conversion;
 
-import com.engelglobal.status.info.model.EquipmentStatusEntity;
-import com.engelglobal.status.info.model.ProductDataEntity;
-import com.engelglobal.status.info.model.ProductStatusEntity;
+import com.poc.kafka.info.model.EquipmentStatusEntity;
+import com.poc.kafka.info.model.ProductDataEntity;
+import com.poc.kafka.info.model.ProductStatusEntity;
 import com.global.ema.model.ProductData;
 import com.global.mrd.EquipmentStatus;
 import com.global.productStats.ProductStatus;

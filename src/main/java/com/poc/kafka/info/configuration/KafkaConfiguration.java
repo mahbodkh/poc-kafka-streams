@@ -1,4 +1,4 @@
-package com.engelglobal.status.info.configuration;
+package com.poc.kafka.info.configuration;
 
 import lombok.Getter;
 import lombok.Setter;

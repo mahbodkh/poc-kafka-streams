@@ -1,6 +1,6 @@
-package com.engelglobal.status.info.serialization;
+package com.poc.kafka.info.serialization;
 
-import com.engelglobal.status.info.model.ProductStatusEntity;
+import com.poc.kafka.info.model.ProductStatusEntity;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.common.header.Headers;

@@ -1,7 +1,7 @@
-package com.engelglobal.status.info.service;
+package com.poc.kafka.info.service;
 
-import com.engelglobal.status.info.conversion.MapperService;
-import com.engelglobal.status.info.model.EquipmentStatusEntity;
+import com.poc.kafka.info.conversion.MapperService;
+import com.poc.kafka.info.model.EquipmentStatusEntity;
 import com.global.ema.model.ProductData;
 import com.global.productStats.ProductStatus;
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;

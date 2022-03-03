@@ -1,6 +1,6 @@
-package com.engelglobal.status.info.serialization;
+package com.poc.kafka.info.serialization;
 
-import com.engelglobal.status.info.model.EquipmentStatusEntity;
+import com.poc.kafka.info.model.EquipmentStatusEntity;
 import org.springframework.beans.factory.annotation.Configurable;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
