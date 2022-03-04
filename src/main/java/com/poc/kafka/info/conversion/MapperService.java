@@ -15,7 +15,7 @@ import java.util.Arrays;
 public interface MapperService
 {
 
-  ProductStatusEntity mapInputMachineStatusAvroToMachineStatusEntity(ProductStatus avro);
-  ProductDataEntity mapInputMachineStatusDataAvroToMachineStatusDataEntity(ProductData avro);
+  ProductStatusEntity mapInputProductStatusAvroToProductStatusEntity(ProductStatus avro);
+  ProductDataEntity mapInputProductDataAvroToProductDataEntity(ProductData avro);
   EquipmentStatus mapInputAggregateToEquipmentStatusAvro(EquipmentStatusEntity entity);
 }

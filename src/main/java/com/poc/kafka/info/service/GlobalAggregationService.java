@@ -32,28 +32,9 @@ public class GlobalAggregationService
               , JoinWindows.of(Duration.ofSeconds(100))
               , StreamJoined.with(Serdes.String(), new SpecificAvroSerde<>(), new SpecificAvroSerde<>())
           )
-
           .peek((k, v) -> log.info("Done -> {}", v))
-          .filterNot((k, v) -> v == null)
-
-          ;
+          .filterNot((k, v) -> v == null);
     }
-
-//  @Bean
-//  public BiConsumer<KStream<String, SpecificRecord>, KStream<String, SpecificRecord>> processMachineStatus() {
-//    return (machineStatusStream, machineStatusDataStream) -> machineStatusStream
-//        //        .peek((k, v) -> log.info("Consuming {}: {}", k, v));
-//
-//        .join(machineStatusDataStream
-//            , joiner()
-//            , JoinWindows.of(Duration.ofSeconds(100))
-//              //                , StreamJoined.with(Serdes.String(), new SpecificAvroSerde<>(), new SpecificAvroSerde<>())
-//        )
-//        .peek((k, v) -> log.info("Done -> {}", v));
-//    //            .filterNot((k, v) -> v == null);
-//
-//
-//  }
 
   private ValueJoiner<SpecificRecord, SpecificRecord, SpecificRecord> joiner() {
     return (machineStatus, machineStatusData) -> {
@@ -63,9 +44,9 @@ public class GlobalAggregationService
       final var avroAgg =
           new EquipmentStatusEntity().toBuilder(); // todo: make the aggregation object
       final var machineStatusEntity =
-          mapperService.mapInputMachineStatusAvroToMachineStatusEntity((ProductStatus) machineStatus);
+          mapperService.mapInputProductStatusAvroToProductStatusEntity((ProductStatus) machineStatus);
       final var machineStatusDataEntity =
-          mapperService.mapInputMachineStatusDataAvroToMachineStatusDataEntity((ProductData) machineStatusData);
+          mapperService.mapInputProductDataAvroToProductDataEntity((ProductData) machineStatusData);
       avroAgg
           .productId(machineStatusDataEntity.getProductId())
           .status(EquipmentStatusEntity.StatusTypes.ONLINE);
@@ -73,4 +54,20 @@ public class GlobalAggregationService
       return mapperService.mapInputAggregateToEquipmentStatusAvro(avroAgg.build());
     };
   }
+
+  //  @Bean
+  //  public BiConsumer<KStream<String, SpecificRecord>, KStream<String, SpecificRecord>> processMachineStatus() {
+  //    return (machineStatusStream, machineStatusDataStream) -> machineStatusStream
+  //        //        .peek((k, v) -> log.info("Consuming {}: {}", k, v));
+  //
+  //        .join(machineStatusDataStream
+  //            , joiner()
+  //            , JoinWindows.of(Duration.ofSeconds(100))
+  //              //                , StreamJoined.with(Serdes.String(), new SpecificAvroSerde<>(), new SpecificAvroSerde<>())
+  //        )
+  //        .peek((k, v) -> log.info("Done -> {}", v));
+  //    //            .filterNot((k, v) -> v == null);
+  //
+  //
+  //  }
 }
